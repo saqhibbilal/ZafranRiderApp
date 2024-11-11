@@ -1,31 +1,42 @@
-// App.js
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import HomeScreen from "./app/screens/Homescreen";
+import WalletScreen from "./app/screens/Walletscreen";
+import ChatScreen from "./app/screens/Chatscreen";
+import ProfileScreen from "./app/screens/Profile/Profilescreen";
+import AccountSettings from "./app/screens/Profile/AccountSettings"; // Import the AccountSettings screen
+import Bottomnav from "./app/screens/Bottomnav"; // Import your Bottomnav component
 
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
- 
+// Stack Navigator for Account Settings screen
+const AccountStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="AccountSettings" component={AccountSettingsScreen} />
+    {/* You can add more screens for the account settings flow here */}
+  </Stack.Navigator>
+);
 
-import Login from './app/screens/Login';
-import Homescreen from './app/screens/Homescreen';
-import Walletscreen from './app/screens/Walletscreen';
-import Chatscreen from './app/screens/Chatscreen';
-import Profilescreen from './app/screens/Profilescreen';
-
-const Stack = createNativeStackNavigator();
-
-const App = () => {
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Homescreen} />
-        <Stack.Screen name="Wallet" component={Walletscreen} />
-        <Stack.Screen name="Chat" component={Chatscreen} />
-        <Stack.Screen name="Profile" component={Profilescreen} />
-      </Stack.Navigator>
+      {/* Tab Navigator */}
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: { display: "none" }, // Hide the default bottom tab navigator styling
+        }}
+        tabBar={(props) => <Bottomnav {...props} />} // Pass navigation props to Bottomnav
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Wallet" component={WalletScreen} />
+        <Tab.Screen name="Chat" component={ChatScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+        {/* Nested Account Stack Navigator under a Tab.Screen */}
+        <Tab.Screen name="AccountSettings" component={AccountSettings} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
-};
-
-export default App;
+}
